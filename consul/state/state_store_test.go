@@ -1839,7 +1839,7 @@ func TestStateStore_ACL_Watches(t *testing.T) {
 	s := testStateStore(t)
 	ch := make(chan struct{})
 
-	s.GetWatchManager("acls").Start(ch)
+	s.GetTableWatch("acls").Wait(ch)
 	go func() {
 		if err := s.ACLSet(1, &structs.ACL{ID: "acl1"}); err != nil {
 			t.Fatalf("err: %s", err)
@@ -1851,7 +1851,7 @@ func TestStateStore_ACL_Watches(t *testing.T) {
 		t.Fatalf("watch was not notified")
 	}
 
-	s.GetWatchManager("acls").Start(ch)
+	s.GetTableWatch("acls").Wait(ch)
 	go func() {
 		if err := s.ACLDelete(2, "acl1"); err != nil {
 			t.Fatalf("err: %s", err)
@@ -1863,7 +1863,7 @@ func TestStateStore_ACL_Watches(t *testing.T) {
 		t.Fatalf("watch was not notified")
 	}
 
-	s.GetWatchManager("acls").Start(ch)
+	s.GetTableWatch("acls").Wait(ch)
 	go func() {
 		if err := s.ACLRestore(&structs.ACL{ID: "acl1"}); err != nil {
 			t.Fatalf("err: %s", err)
